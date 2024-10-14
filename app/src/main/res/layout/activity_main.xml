@@ -7,13 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <Button
+        android:id="@+id/loginId"
+        android:layout_width="256dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="250dp"
+        android:onClick="login"
+        android:text="Login"
+        app:layout_constraintBottom_toTopOf="@id/registerId"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/registerId"
+        android:layout_width="256dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="250dp"
+        android:onClick="register"
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginId" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
