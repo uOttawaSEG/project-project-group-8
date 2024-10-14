@@ -11,28 +11,24 @@
         android:id="@+id/attendeeId"
         android:layout_width="256dp"
         android:layout_height="48dp"
-        android:layout_marginTop="250dp"
+        android:layout_marginBottom="16dp"
         android:onClick="attendee"
         android:text="Attendee"
-        app:layout_constraintBottom_toTopOf="@id/OrganizerId"
+        app:layout_constraintBottom_toTopOf="@+id/OrganizerId"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.516"
-
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/OrganizerId"
         android:layout_width="256dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="250dp"
         android:onClick="organizer"
         android:text="Organizer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/attendeeId" />
-
+        app:layout_constraintTop_toBottomOf="@+id/attendeeId"
+        android:layout_marginBottom="250dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
