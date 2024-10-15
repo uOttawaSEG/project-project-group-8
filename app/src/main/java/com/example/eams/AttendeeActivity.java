@@ -22,7 +22,6 @@ public class AttendeeActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_attendeelogin);
 
-        // Initialize Firebase Database reference
         databaseReference = FirebaseDatabase.getInstance().getReference("attendees");
 
         View mainView = findViewById(R.id.main);
@@ -61,7 +60,7 @@ public class AttendeeActivity extends AppCompatActivity {
 
         Attendee attendee = new Attendee(firstName, lastName, email, password, phone, address);
 
-        // Save the user's info in SharedPreferences
+        // Save the user's info
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("firstName", firstName);
@@ -73,7 +72,7 @@ public class AttendeeActivity extends AppCompatActivity {
         editor.apply();
 
         // Save the attendee to Firebase
-        String attendeeId = databaseReference.push().getKey(); // Generate a unique ID for each attendee
+        String attendeeId = databaseReference.push().getKey(); // different id for each attendee
         if (attendeeId != null) {
             databaseReference.child(attendeeId).setValue(attendee)
                     .addOnSuccessListener(aVoid -> {

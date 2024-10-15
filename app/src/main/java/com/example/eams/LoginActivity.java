@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase Database reference
+        // Initialize Firebase db reference
         databaseReference = FirebaseDatabase.getInstance().getReference("attendees");
 
         View mainView = findViewById(R.id.main);
@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Set up the submit button
+
         Button submitButton = findViewById(R.id.submitId);
         submitButton.setOnClickListener(this::loginAttendee);
     }
@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Check the user's credentials in Firebase
+        // Check user info in Firebase
         databaseReference.orderByChild("email").equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -69,8 +69,8 @@ public class LoginActivity extends AppCompatActivity {
                                 Attendee attendee = attendeeSnapshot.getValue(Attendee.class);
                                 if (attendee != null && attendee.getPassword().equals(password)) {
                                     Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                                    // Proceed to the next activity or screen
-                                    return; // Login successful, exit the loop
+
+                                    return; //it works!!
                                 }
                             }
                             Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
