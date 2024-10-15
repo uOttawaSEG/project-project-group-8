@@ -53,6 +53,8 @@ public class AttendeeActivity extends AppCompatActivity {
             return;
         }
 
+        Attendee attendee = new Attendee(firstName, lastName, email, password, phone, address);
+
         // To save the user's info
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -67,4 +69,5 @@ public class AttendeeActivity extends AppCompatActivity {
         //To confirm that the user is registered
         Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show();
     }
+
 }
