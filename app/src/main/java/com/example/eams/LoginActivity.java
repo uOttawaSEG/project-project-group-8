@@ -44,10 +44,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
         Button submitButton = findViewById(R.id.submitId);
-        submitButton.setOnClickListener(this::loginAttendee);
+        submitButton.setOnClickListener(this::loginAttempt);
     }
 
-    public void loginAttendee(View view) {
+    public void loginAttempt(View view) {
         EditText usernameEditText = findViewById(R.id.usernameId);
         EditText passwordEditText = findViewById(R.id.passwordId);
 
@@ -56,6 +56,14 @@ public class LoginActivity extends AppCompatActivity {
 
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Administrator admin = new Administrator();
+
+        if(admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
+
+            Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
             return;
         }
 
