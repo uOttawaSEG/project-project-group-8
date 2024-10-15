@@ -10,14 +10,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AttendeeActivity extends AppCompatActivity {
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_attendeelogin);
+
+        // Initialize Firebase Database reference
+        databaseReference = FirebaseDatabase.getInstance().getReference("attendees");
 
         View mainView = findViewById(R.id.main);
         if (mainView == null) {
@@ -55,7 +61,7 @@ public class AttendeeActivity extends AppCompatActivity {
 
         Attendee attendee = new Attendee(firstName, lastName, email, password, phone, address);
 
-        // To save the user's info
+        // Save the user's info in SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("firstName", firstName);
@@ -66,8 +72,16 @@ public class AttendeeActivity extends AppCompatActivity {
         editor.putString("address", address);
         editor.apply();
 
-        //To confirm that the user is registered
-        Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+        // Save the attendee to Firebase
+        String attendeeId = databaseReference.push().getKey(); // Generate a unique ID for each attendee
+        if (attendeeId != null) {
+            databaseReference.child(attendeeId).setValue(attendee)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Failed to register: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
-
 }

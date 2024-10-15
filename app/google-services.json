@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253332018696",
+    "project_id": "eams-b61e9",
+    "storage_bucket": "eams-b61e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253332018696:android:50d1a0972968013a4a23bd",
+        "android_client_info": {
+          "package_name": "com.example.eams"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa1sA0OzHpMmYzdBPf67MC24d91hKqLaw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
