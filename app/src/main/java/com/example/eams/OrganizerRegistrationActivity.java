@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class OrganizerRegistrationActivity extends AppCompatActivity {
 
@@ -18,6 +20,7 @@ public class OrganizerRegistrationActivity extends AppCompatActivity {
     private EditText addressEditText;
     private EditText organizationNameEditText;
     private Button registerButton;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,8 @@ public class OrganizerRegistrationActivity extends AppCompatActivity {
         addressEditText = findViewById(R.id.address);
         organizationNameEditText = findViewById(R.id.organizationName);
         registerButton = findViewById(R.id.registerButton);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("organizers");
 
         // Set the register button action
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +63,11 @@ public class OrganizerRegistrationActivity extends AppCompatActivity {
                 TextUtils.isEmpty(organizationName)) {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
         } else {
-            // Proceed with registration logic (e.g., save to a database, display a success message)
+            // Create Organizer object
+            Organizer organizer = new Organizer(firstName, lastName, email, password, phoneNumber, address, organizationName);
+            databaseReference.push().setValue(organizer);
             Toast.makeText(this, "Organizer Registered Successfully!", Toast.LENGTH_LONG).show();
+            finish(); // Close the registration activity
         }
     }
-
 }

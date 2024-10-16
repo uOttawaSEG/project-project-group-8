@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // firebase
+        // firebase to initialize
         FirebaseApp.initializeApp(this);
 
         EdgeToEdge.enable(this);

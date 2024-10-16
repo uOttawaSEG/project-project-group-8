@@ -71,7 +71,7 @@ public class AttendeeActivity extends AppCompatActivity {
         editor.putString("address", address);
         editor.apply();
 
-        // save attendee Firebase
+        // save attendee to Firebase
         String attendeeId = databaseReference.push().getKey(); // different id for each attendee
         if (attendeeId != null) {
             databaseReference.child(attendeeId).setValue(attendee)
