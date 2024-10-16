@@ -8,6 +8,9 @@ public class Attendee {
     private String phoneNumber;
     private String address;
 
+    public Attendee() {
+    }
+
     public Attendee(String firstName, String lastName, String email, String password, String phoneNumber, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -69,7 +72,6 @@ public class Attendee {
         return "Welcome! You are logged in as an Attendee.";
     }
 
-    // Convert attendee details to a string for debugging or display purposes
     @Override
     public String toString() {
         return "Attendee{" +

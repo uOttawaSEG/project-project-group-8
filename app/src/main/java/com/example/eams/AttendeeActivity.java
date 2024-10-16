@@ -60,7 +60,7 @@ public class AttendeeActivity extends AppCompatActivity {
 
         Attendee attendee = new Attendee(firstName, lastName, email, password, phone, address);
 
-        // Save the user's info
+        // save user's info
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("firstName", firstName);
@@ -71,7 +71,7 @@ public class AttendeeActivity extends AppCompatActivity {
         editor.putString("address", address);
         editor.apply();
 
-        // Save the attendee to Firebase
+        // save attendee Firebase
         String attendeeId = databaseReference.push().getKey(); // different id for each attendee
         if (attendeeId != null) {
             databaseReference.child(attendeeId).setValue(attendee)

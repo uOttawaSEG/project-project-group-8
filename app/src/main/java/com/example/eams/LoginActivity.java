@@ -16,7 +16,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseError;
-
 import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase db reference
         databaseReference = FirebaseDatabase.getInstance().getReference("attendees");
 
         View mainView = findViewById(R.id.main);
@@ -42,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
 
         Button submitButton = findViewById(R.id.submitId);
         submitButton.setOnClickListener(this::loginAttempt);
@@ -60,18 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        Administrator admin = new Administrator();
-
-        if(admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
-
-            Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-            Intent intent =new Intent(LoginActivity.this,WelcomeActivity.class);
-            intent.putExtra("role","Administrator");
-            startActivity(intent);
-            return;
-        }
-
-        // Check user info in Firebase
+        // find user firebase
         databaseReference.orderByChild("email").equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -81,10 +67,10 @@ public class LoginActivity extends AppCompatActivity {
                                 Attendee attendee = attendeeSnapshot.getValue(Attendee.class);
                                 if (attendee != null && attendee.getPassword().equals(password)) {
                                     Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(LoginActivity.this,WelcomeActivity.class);
-                                    intent.putExtra("role","Attendee");
+                                    Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                                    intent.putExtra("role", "Attendee");
                                     startActivity(intent);
-                                    return; //it works!!
+                                    return;
                                 }
                             }
                             Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
