@@ -57,6 +57,17 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        Administrator admin = new Administrator();
+        if(admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
+            Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+            Intent intent =new Intent(LoginActivity.this,WelcomeActivity.class);
+            intent.putExtra("role","Administrator");
+            startActivity(intent);
+            return;
+        }
+
+
+
         // find user firebase
         databaseReference.orderByChild("email").equalTo(username)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
