@@ -1,5 +1,6 @@
 package com.example.eams;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -67,7 +68,8 @@ public class OrganizerRegistrationActivity extends AppCompatActivity {
             Organizer organizer = new Organizer(firstName, lastName, email, password, phoneNumber, address, organizationName);
             databaseReference.push().setValue(organizer);
             Toast.makeText(this, "Organizer Registered Successfully!", Toast.LENGTH_LONG).show();
-            finish(); // Close the registration activity
+            Intent intent = new Intent(OrganizerRegistrationActivity.this, MainActivity.class);
+            startActivity(intent);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.eams;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -82,5 +83,8 @@ public class AttendeeActivity extends AppCompatActivity {
                         Toast.makeText(this, "Failed to register: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         }
+
+        Intent intent = new Intent(AttendeeActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }

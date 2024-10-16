@@ -16,7 +16,7 @@ public class WelcomeActivity extends AppCompatActivity {
         String role = getIntent().getStringExtra("role");
 
         TextView welcomeTextView = findViewById(R.id.welcomeTextView);
-        welcomeTextView.setText("Welcome, " + role + "!");
+        welcomeTextView.setText("Welcome! You are logged in as " + role);
     }
 
     public void logout(View view) {
