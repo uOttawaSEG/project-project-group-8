@@ -35,4 +35,8 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(RegisterActivity.this, AttendeeActivity.class);
         startActivity(intent);
     }
+    public void organizer(View view) {
+        Intent intent = new Intent(RegisterActivity.this, OrganizerRegistrationActivity.class);
+        startActivity(intent);
+    }
 }
