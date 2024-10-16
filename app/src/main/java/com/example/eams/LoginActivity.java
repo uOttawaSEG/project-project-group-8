@@ -1,5 +1,6 @@
 package com.example.eams;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -65,7 +66,8 @@ public class LoginActivity extends AppCompatActivity {
 
             Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
             Intent intent =new Intent(LoginActivity.this,WelcomeActivity.class);
-            intent.putExtra("role","organizer");
+            intent.putExtra("role","Administrator");
+            startActivity(intent);
             return;
         }
 
@@ -81,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(LoginActivity.this,WelcomeActivity.class);
                                     intent.putExtra("role","Attendee");
+                                    startActivity(intent);
                                     return; //it works!!
                                 }
                             }
