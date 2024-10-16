@@ -63,7 +63,16 @@ public class OrganizerRegistrationActivity extends AppCompatActivity {
                 TextUtils.isEmpty(password) || TextUtils.isEmpty(phoneNumber) || TextUtils.isEmpty(address) ||
                 TextUtils.isEmpty(organizationName)) {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
-        } else {
+        }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(address).matches()) {
+            Toast.makeText(this, "Invalid Email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (phoneNumber.length() !=10 || !Patterns.PHONE.matcher(phoneNumber).matches()) {
+            Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
             // Create Organizer object
             Organizer organizer = new Organizer(firstName, lastName, email, password, phoneNumber, address, organizationName);
             databaseReference.push().setValue(organizer);
