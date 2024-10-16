@@ -58,6 +58,14 @@ public class AttendeeActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (phone.length() !=10 || !Patterns.PHONE.matcher(phone).matches()) {
+            Toast.makeText(this, "Invalid phone number", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Attendee attendee = new Attendee(firstName, lastName, email, password, phone, address);
 
