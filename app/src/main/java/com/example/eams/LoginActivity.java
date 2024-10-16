@@ -64,6 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         if(admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
 
             Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+            Intent intent =new Intent(LoginActivity.this,WelcomeActivity.class);
+            intent.putExtra("role","organizer");
             return;
         }
 
@@ -77,7 +79,8 @@ public class LoginActivity extends AppCompatActivity {
                                 Attendee attendee = attendeeSnapshot.getValue(Attendee.class);
                                 if (attendee != null && attendee.getPassword().equals(password)) {
                                     Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-
+                                    Intent intent = new Intent(LoginActivity.this,WelcomeActivity.class);
+                                    intent.putExtra("role","Attendee");
                                     return; //it works!!
                                 }
                             }
