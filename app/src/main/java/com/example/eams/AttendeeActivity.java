@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import android.util.Patterns;
 
 public class AttendeeActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
