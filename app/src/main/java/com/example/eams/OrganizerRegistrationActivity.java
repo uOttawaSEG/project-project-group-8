@@ -65,7 +65,7 @@ public class OrganizerRegistrationActivity extends AppCompatActivity {
                 TextUtils.isEmpty(organizationName)) {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
         }
-        else if (!Patterns.EMAIL_ADDRESS.matcher(address).matches()) {
+        else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Toast.makeText(this, "Invalid Email", Toast.LENGTH_SHORT).show();
             return;
         }
