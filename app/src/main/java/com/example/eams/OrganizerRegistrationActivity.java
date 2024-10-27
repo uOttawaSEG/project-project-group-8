@@ -77,7 +77,7 @@ public class OrganizerRegistrationActivity extends AppCompatActivity {
             // Create Organizer object
             Organizer organizer = new Organizer(firstName, lastName, email, password, phoneNumber, address, organizationName);
             databaseReference.push().setValue(organizer);
-            Toast.makeText(this, "Organizer Registered Successfully!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Registration submitted for approval", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(OrganizerRegistrationActivity.this, MainActivity.class);
             startActivity(intent);
         }

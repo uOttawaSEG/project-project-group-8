@@ -62,11 +62,14 @@ public class LoginActivity extends AppCompatActivity {
                             for (DataSnapshot attendeeSnapshot : dataSnapshot.getChildren()) {
                                 Attendee attendee = attendeeSnapshot.getValue(Attendee.class);
                                 if (attendee != null && attendee.getPassword().equals(password)) {
-                                    Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                                    intent.putExtra("role", "Attendee");
-                                    startActivity(intent);
+                                    // Check the status before allowing login
+                                    handleUserStatus(attendee.getStatus(), "Attendee");
                                     return;
+                                    //Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                                    //Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                                    //intent.putExtra("role", "Attendee");
+                                    //startActivity(intent);
+
                                 }
                             }
                             Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
@@ -94,11 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                             for (DataSnapshot organizerSnapshot : dataSnapshot.getChildren()) {
                                 Organizer organizer = organizerSnapshot.getValue(Organizer.class);
                                 if (organizer != null && organizer.getPassword().equals(password)) {
-                                    Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                                    intent.putExtra("role", "Organizer");
-                                    startActivity(intent);
+                                    // Check the status before allowing login
+                                    handleUserStatus(organizer.getStatus(), "Organizer");
                                     return;
+                                    //Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                                    //Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                                    //intent.putExtra("role", "Organizer");
+                                    //startActivity(intent);
+
                                 }
                             }
                             Toast.makeText(LoginActivity.this, "Invalid password", Toast.LENGTH_SHORT).show();
@@ -112,5 +118,24 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    private void handleUserStatus(String status, String role) {
+        switch (status) {
+            case "approved":
+                Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                intent.putExtra("role", role);
+                startActivity(intent);
+                break;
+            case "pending":
+                Toast.makeText(LoginActivity.this, "Your registration is still pending approval.", Toast.LENGTH_SHORT).show();
+                break;
+            case "rejected":
+                Toast.makeText(LoginActivity.this, "Your registration has been rejected. Please contact the Administrator.", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                Toast.makeText(LoginActivity.this, "Error:Invalid status", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

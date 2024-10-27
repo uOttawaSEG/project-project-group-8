@@ -7,6 +7,7 @@ public class Attendee {
     private String password;
     private String phoneNumber;
     private String address;
+    private String status;
 
     public Attendee() {
     }
@@ -18,6 +19,7 @@ public class Attendee {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.status = "pending";
     }
 
     public String getFirstName() {
@@ -68,9 +70,17 @@ public class Attendee {
         this.address = address;
     }
 
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String welcomeMessage() {
         return "Welcome! You are logged in as an Attendee.";
     }
+
 
     @Override
     public String toString() {
@@ -80,6 +90,7 @@ public class Attendee {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", address='" + address + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }

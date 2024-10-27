@@ -8,6 +8,8 @@ public class Organizer {
     private String phoneNumber;
     private String address;
     private String organizationName;
+    private String status;
+
 
 
     public Organizer() {
@@ -21,6 +23,7 @@ public class Organizer {
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.organizationName = organizationName;
+        this.status = "pending";
     }
 
     public String getFirstName() {
@@ -77,5 +80,24 @@ public class Organizer {
 
     public void setOrganizationName(String organizationName) {
         this.organizationName = organizationName;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    @Override
+    public String toString() {
+        return "Organizer{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", address='" + address + '\'' +
+                ", organizationName='" + organizationName + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }
