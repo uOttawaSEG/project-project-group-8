@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         Administrator admin = new Administrator();
         if (admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
             Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, AdministratorActivity.class);
             intent.putExtra("role", "Administrator");
             startActivity(intent);
             return;
