@@ -3,7 +3,6 @@ package com.example.eams;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -16,10 +15,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // firebase to initialize
         FirebaseApp.initializeApp(this);
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 

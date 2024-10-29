@@ -1,24 +1,59 @@
 package com.example.eams;
 
 import android.os.Bundle;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 public class InboxActivity extends AppCompatActivity {
+
+    private TextView registrationRequestId;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_inbox);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        registrationRequestId = findViewById(R.id.registrationRequestId);
+        databaseReference = FirebaseDatabase.getInstance().getReference("registration_requests");
+
+        fetchRegistrationRequests();
+    }
+
+    private void fetchRegistrationRequests() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                StringBuilder requests = new StringBuilder();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    RegistrationRequest request = snapshot.getValue(RegistrationRequest.class);
+                    if (request != null) {
+                        requests.append("Name: ").append(request.getFirstName()).append(" ").append(request.getLastName()).append("\n")
+                                .append("Email: ").append(request.getEmail()).append("\n")
+                                .append("Organization: ").append(request.getOrganizationName()).append("\n\n");
+                    }
+                }
+
+                if (requests.length() > 0) {
+                    registrationRequestId.setText(requests.toString());
+                } else {
+                    registrationRequestId.setText("No registration requests available.");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(InboxActivity.this, "Error fetching requests: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 }
