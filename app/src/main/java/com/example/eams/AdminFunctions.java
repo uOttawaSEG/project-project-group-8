@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class AdminFunctions extends AppCompatActivity {
     private DatabaseReference attendeeReference;
     private DatabaseReference organizerReference;
+    private String currentRequestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +32,41 @@ public class AdminFunctions extends AppCompatActivity {
         TextView userInfo = findViewById(R.id.welcomeTextView);
         userInfo.setText(r);
     }
-
-    public void approve(View view) {
-        Intent intent = new Intent(AdminFunctions.this, InboxActivity.class);
-        startActivity(intent);
+    
+    private String extractRequestIdFromUserInfo(String userInfo){
+        return userInfo;
     }
 
-    public void reject(View view) {
-        Intent intent = new Intent(AdminFunctions.this, InboxActivity.class);
-        startActivity(intent);
+    public void approve(View view,String userType) {
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
+        userReference.removeValue().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                Toast.makeText(this,"Request approved", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this,"Approval failed:"+ task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            finish();
+        });
+    }
+
+    public void reject(View view,String userType) {
+        DatabaseReference rejectedReference = FirebaseDatabase.getInstance().getReference("rejected_"+ userType ).child(currentRequestId);
+        rejectedReference.setValue(currentRequestId).addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
+                userReference.removeValue().addOnCompleteListener(removeTask -> {
+                    if (removeTask.isSuccessful()){
+                        Toast.makeText(this,"Request rejected",Toast.LENGTH_SHORT).show();
+                    } else{
+                        Toast.makeText(this, "Rejection Failed:"+ removeTask.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                    finish();
+                });
+            } else{
+                Toast.makeText(this,"Request Failed:" + task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
     }
 }
