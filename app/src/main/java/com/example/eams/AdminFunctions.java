@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DatabaseReference;
@@ -32,17 +31,17 @@ public class AdminFunctions extends AppCompatActivity {
         attendeeReference = FirebaseDatabase.getInstance().getReference("attendees");
         organizerReference = FirebaseDatabase.getInstance().getReference("organizers");
 
-         userType = receive.getStringExtra("UserType");
+        userType = receive.getStringExtra("UserType");
 
         TextView userInfo = findViewById(R.id.welcomeTextView);
         userInfo.setText(r);
     }
-    
+
     private String extractRequestIdFromUserInfo(String userInfo){
         return userInfo;
     }
 
-     public void approve(View view) {
+    public void approve(View view) {
         approveRequest(userType);
     }
 
@@ -51,9 +50,11 @@ public class AdminFunctions extends AppCompatActivity {
     }
 
     private void approveRequest(String userType) {
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
-        userReference.removeValue().addOnCompleteListener(task -> {
+        DatabaseReference approvedRef = FirebaseDatabase.getInstance().getReference(userType + "_approved").child(currentRequestId);
+
+        approvedRef.setValue(currentRequestId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                removeFromPendingRequests(userType);
                 Toast.makeText(this, "Request approved", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Approval failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -61,22 +62,26 @@ public class AdminFunctions extends AppCompatActivity {
             finish();
         });
     }
-   private void rejectRequest(String userType) {
+
+    private void rejectRequest(String userType) {
         DatabaseReference rejectedReference = FirebaseDatabase.getInstance().getReference("rejected_" + userType).child(currentRequestId);
+
         rejectedReference.setValue(currentRequestId).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
-                userReference.removeValue().addOnCompleteListener(removeTask -> {
-                    if (removeTask.isSuccessful()) {
-                        Toast.makeText(this, "Request rejected", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Rejection Failed: " + removeTask.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                    finish();
-                });
+                removeFromPendingRequests(userType);
+                Toast.makeText(this, "Request rejected", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Request Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                finish();
+                Toast.makeText(this, "Rejection failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+            }
+            finish();
+        });
+    }
+
+    private void removeFromPendingRequests(String userType) {
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
+        userReference.removeValue().addOnCompleteListener(removeTask -> {
+            if (!removeTask.isSuccessful()) {
+                Toast.makeText(this, "Error removing from pending requests", Toast.LENGTH_SHORT).show();
             }
         });
     }

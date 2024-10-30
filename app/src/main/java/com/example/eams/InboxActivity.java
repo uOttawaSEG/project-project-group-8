@@ -2,7 +2,6 @@ package com.example.eams;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,6 +27,7 @@ public class InboxActivity extends AppCompatActivity {
 
     private ListView requestListView;
     private List<String> requestList;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,88 +37,77 @@ public class InboxActivity extends AppCompatActivity {
         attendeeReference = FirebaseDatabase.getInstance().getReference("attendees");
         organizerReference = FirebaseDatabase.getInstance().getReference("organizers");
 
-
         requestList = new ArrayList<>();
         requestListView = findViewById(R.id.requestListView);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, requestList);
+        requestListView.setAdapter(adapter);
 
-        ValueEventListener requestListener = new ValueEventListener() {
+        requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+                String userType = item.startsWith("Organizer:") ? "organizers" : "attendees";
+
+                Intent intent = new Intent(InboxActivity.this, AdminFunctions.class);
+                intent.putExtra("UserInfo", item);
+                intent.putExtra("UserType", userType);
+                startActivity(intent);
+            }
+        });
+
+        loadAttendeeRequests();
+        loadOrganizerRequests();
+    }
+
+    private void loadAttendeeRequests() {
+        attendeeReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-
+                requestList.clear();
 
                 for (DataSnapshot attendeeSnapshot : dataSnapshot.getChildren()) {
-
-                    if (attendeeSnapshot.getValue() == null) {
-                        Toast.makeText(InboxActivity.this, "No Data Available", Toast.LENGTH_LONG).show();
-                    }
-                    String request;
                     Attendee attendee = attendeeSnapshot.getValue(Attendee.class);
-                    request = "Name: "+attendee.getFirstName()+" "+attendee.getLastName()+" Email: "+attendee.getEmail()+" Phone:"+attendee.getPhoneNumber()+" Address: "+attendee.getAddress();
-                    requestList.add(request);
-
-                }
-
-                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1,
-                        requestList);
-                requestListView.setAdapter(adapter);
-                requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                        final String item = (String) parent.getItemAtPosition(position);
-                        Intent intent = new Intent(InboxActivity.this, AdminFunctions.class);
-                        intent.putExtra("UserInfo", item);
-                        startActivity(intent);
+                    if (attendee != null) {
+                        String request = "Attendee: Name: " + attendee.getFirstName() + " " + attendee.getLastName() +
+                                " | Email: " + attendee.getEmail() +
+                                " | Phone: " + attendee.getPhoneNumber() +
+                                " | Address: " + attendee.getAddress();
+                        requestList.add(request);
                     }
-                });
-
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(InboxActivity.this, "Error fetching requests: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(InboxActivity.this, "Error fetching attendee requests: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        };
-        attendeeReference.addValueEventListener(requestListener);
+        });
+    }
 
-        ValueEventListener requestListener2 = new ValueEventListener() {
+    private void loadOrganizerRequests() {
+        organizerReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot organizerSnapshot : dataSnapshot.getChildren()) {
-
-                    if (organizerSnapshot.getValue() == null) {
-                        Toast.makeText(InboxActivity.this, "No Data Available", Toast.LENGTH_LONG).show();
-                    }
-
-                    String request;
                     Organizer organizer = organizerSnapshot.getValue(Organizer.class);
-                    request = "Name: "+organizer.getFirstName()+" "+organizer.getLastName()+" Email: "+organizer.getEmail()+" Phone: "+organizer.getPhoneNumber()+ " Organization Name: "+organizer.getOrganizationName()+" Address: "+ organizer.getAddress();
-                    requestList.add(request);
-
-                }
-
-                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1,
-                        requestList);
-                requestListView.setAdapter(adapter);
-                requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                        final String item = (String) parent.getItemAtPosition(position);
-                        Intent intent = new Intent(InboxActivity.this, AdminFunctions.class);
-                        intent.putExtra("UserInfo", item);
-                        startActivity(intent);
+                    if (organizer != null) {
+                        String request = "Organizer: Name: " + organizer.getFirstName() + " " + organizer.getLastName() +
+                                " | Email: " + organizer.getEmail() +
+                                " | Phone: " + organizer.getPhoneNumber() +
+                                " | Organization: " + organizer.getOrganizationName() +
+                                " | Address: " + organizer.getAddress();
+                        requestList.add(request);
                     }
-                });
-
+                }
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(InboxActivity.this, "Error fetching requests: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(InboxActivity.this, "Error fetching organizer requests: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
-        };
-        organizerReference.addValueEventListener(requestListener2);
-
+        });
     }
 }
