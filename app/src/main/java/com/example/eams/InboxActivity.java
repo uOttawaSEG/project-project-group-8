@@ -66,6 +66,9 @@ public class InboxActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                         final String item = (String) parent.getItemAtPosition(position);
+                        Intent intent = new Intent(InboxActivity.this, AdminFunctions.class);
+                        intent.putExtra("UserInfo", item);
+                        startActivity(intent);
                     }
                 });
 
@@ -102,6 +105,9 @@ public class InboxActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                         final String item = (String) parent.getItemAtPosition(position);
+                        Intent intent = new Intent(InboxActivity.this, AdminFunctions.class);
+                        intent.putExtra("UserInfo", item);
+                        startActivity(intent);
                     }
                 });
 
