@@ -50,11 +50,10 @@ public class AdminFunctions extends AppCompatActivity {
     }
 
     private void approveRequest(String userType) {
-        DatabaseReference approvedRef = FirebaseDatabase.getInstance().getReference(userType + "_approved").child(currentRequestId);
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
 
-        approvedRef.setValue(currentRequestId).addOnCompleteListener(task -> {
+        userRef.child("status").setValue("Approved").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                removeFromPendingRequests(userType);
                 Toast.makeText(this, "Request approved", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Approval failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -64,11 +63,10 @@ public class AdminFunctions extends AppCompatActivity {
     }
 
     private void rejectRequest(String userType) {
-        DatabaseReference rejectedReference = FirebaseDatabase.getInstance().getReference("rejected_" + userType).child(currentRequestId);
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
 
-        rejectedReference.setValue(currentRequestId).addOnCompleteListener(task -> {
+        userRef.child("status").setValue("Rejected").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                removeFromPendingRequests(userType);
                 Toast.makeText(this, "Request rejected", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Rejection failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -76,6 +74,7 @@ public class AdminFunctions extends AppCompatActivity {
             finish();
         });
     }
+
 
     private void removeFromPendingRequests(String userType) {
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
