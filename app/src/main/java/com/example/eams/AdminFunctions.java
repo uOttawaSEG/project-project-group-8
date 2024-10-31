@@ -3,6 +3,7 @@ package com.example.eams;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,8 +52,7 @@ public class AdminFunctions extends AppCompatActivity {
 
     private void approveRequest(String userType) {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
-
-        userRef.child("status").setValue("Approved").addOnCompleteListener(task -> {
+        userRef.child("status").setValue("approved").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Request approved", Toast.LENGTH_SHORT).show();
             } else {
@@ -64,8 +64,7 @@ public class AdminFunctions extends AppCompatActivity {
 
     private void rejectRequest(String userType) {
         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference(userType).child(currentRequestId);
-
-        userRef.child("status").setValue("Rejected").addOnCompleteListener(task -> {
+        userRef.child("status").setValue("rejected").addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(this, "Request rejected", Toast.LENGTH_SHORT).show();
             } else {
@@ -74,6 +73,7 @@ public class AdminFunctions extends AppCompatActivity {
             finish();
         });
     }
+
 
 
     private void removeFromPendingRequests(String userType) {
