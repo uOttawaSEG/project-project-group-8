@@ -79,8 +79,7 @@ public class AdminFunctions extends AppCompatActivity {
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(AdminFunctions.this, "Request approved", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(AdminFunctions.this, InboxActivity.class);
-                                            startActivity(intent);
+                                            finish();
                                         } else {
                                             Toast.makeText(AdminFunctions.this, "Request failed to approve", Toast.LENGTH_SHORT).show();
                                         }
@@ -115,8 +114,7 @@ public class AdminFunctions extends AppCompatActivity {
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(AdminFunctions.this, "Request approved", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(AdminFunctions.this, InboxActivity.class);
-                                            startActivity(intent);
+                                            finish();
                                         } else {
                                             Toast.makeText(AdminFunctions.this, "Request failed to approve", Toast.LENGTH_SHORT).show();
                                         }
@@ -157,6 +155,7 @@ public class AdminFunctions extends AppCompatActivity {
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(AdminFunctions.this, "Request rejected", Toast.LENGTH_SHORT).show();
+                                            finish();
                                         } else {
                                             Toast.makeText(AdminFunctions.this, "Request failed to reject", Toast.LENGTH_SHORT).show();
                                         }
@@ -191,6 +190,7 @@ public class AdminFunctions extends AppCompatActivity {
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(AdminFunctions.this, "Request rejected", Toast.LENGTH_SHORT).show();
+                                            finish();
                                         } else {
                                             Toast.makeText(AdminFunctions.this, "Request failed to reject", Toast.LENGTH_SHORT).show();
                                         }
