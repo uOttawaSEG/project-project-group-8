@@ -25,6 +25,12 @@ public class AdministratorActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void rinbox(View view) {
+
+        Intent intent = new Intent(AdministratorActivity.this, RejectedInboxActivity.class);
+        startActivity(intent);
+    }
+
     public void logout(View view) {
 
         Intent intent = new Intent(AdministratorActivity.this, MainActivity.class);

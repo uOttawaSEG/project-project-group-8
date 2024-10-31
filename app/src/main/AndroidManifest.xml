@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EAMS"
         tools:targetApi="31">
-
+        <activity
+            android:name=".RejectedInboxActivity"
+            android:exported="false" />
         <activity
             android:name=".InboxActivity"
             android:exported="false" />
@@ -39,16 +41,16 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".AttendeeActivity"
-            android:exported="true" />
-        <!-- Add the AdminFunctions activity here -->
+            android:exported="true" /> <!-- Add the AdminFunctions activity here -->
         <activity
             android:name=".AdminFunctions"
             android:exported="true" />
-
     </application>
+
 </manifest>
