@@ -67,7 +67,7 @@ public class InboxActivity extends AppCompatActivity {
 
                 for (DataSnapshot attendeeSnapshot : dataSnapshot.getChildren()) {
                     Attendee attendee = attendeeSnapshot.getValue(Attendee.class);
-                    if (attendee != null) {
+                    if (attendee != null && attendee.getStatus().equals("pending")) {
                         String request = "Attendee: Name: " + attendee.getFirstName() + " " + attendee.getLastName() +
                                 " | Email: " + attendee.getEmail() +
                                 " | Phone: " + attendee.getPhoneNumber() +
@@ -92,7 +92,7 @@ public class InboxActivity extends AppCompatActivity {
 
                 for (DataSnapshot organizerSnapshot : dataSnapshot.getChildren()) {
                     Organizer organizer = organizerSnapshot.getValue(Organizer.class);
-                    if (organizer != null) {
+                    if (organizer != null && organizer.getStatus().equals("pending")) {
                         String request = "Organizer: Name: " + organizer.getFirstName() + " " + organizer.getLastName() +
                                 " | Email: " + organizer.getEmail() +
                                 " | Phone: " + organizer.getPhoneNumber() +
