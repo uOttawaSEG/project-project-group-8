@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Your registration is still pending approval.", Toast.LENGTH_SHORT).show();
                 break;
             case "rejected":
-                Toast.makeText(LoginActivity.this, "Your registration has been rejected. Please contact the Administrator.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Your registration has been rejected. Please contact the Administrator.(Phone:0123456789)", Toast.LENGTH_SHORT).show();
                 break;
             default:
                 Toast.makeText(LoginActivity.this, "Error:Invalid status", Toast.LENGTH_SHORT).show();
