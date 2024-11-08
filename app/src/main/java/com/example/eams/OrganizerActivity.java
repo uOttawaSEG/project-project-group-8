@@ -16,17 +16,20 @@ public class OrganizerActivity extends AppCompatActivity {
 
     public void createEvent(View view) {
 
-
+        Intent intent = new Intent(OrganizerActivity.this, CreateEventActivity.class);
+        startActivity(intent);
     }
 
     public void upcomingEvents(View view) {
 
-
+        Intent intent = new Intent(OrganizerActivity.this, UpcomingEventsActivity.class);
+        startActivity(intent);
     }
 
     public void pastEvents(View view) {
 
-
+        Intent intent = new Intent(OrganizerActivity.this, PastEventsActivity.class);
+        startActivity(intent);
     }
 
     public void logout(View view) {
