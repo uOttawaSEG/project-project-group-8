@@ -123,9 +123,15 @@ public class LoginActivity extends AppCompatActivity {
         switch (status) {
             case "approved":
                 Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                intent.putExtra("role", role);
-                startActivity(intent);
+                if(role.equals("Organizer")) {
+                    Intent intent = new Intent(LoginActivity.this, OrganizerActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                    intent.putExtra("role", role);
+                    startActivity(intent);
+                }
                 break;
             case "pending":
                 Toast.makeText(LoginActivity.this, "Your registration is still pending approval.", Toast.LENGTH_SHORT).show();
