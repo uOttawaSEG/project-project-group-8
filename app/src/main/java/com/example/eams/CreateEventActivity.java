@@ -14,13 +14,29 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class CreateEventActivity extends AppCompatActivity {
 
     private EditText titleEditText, descriptionEditText, addressEditText;
     private TextView dateTextView, startTimeTextView, endTimeTextView;
     private CheckBox autoApproveCheckBox;
     private Button createEventButton;
-    private Calendar selectedDate, currentDate, startTime, endTime;
+    private long selectedDateInMillis, startTimeInMillis, endTimeInMillis;
     private String email;
 
     @Override
@@ -38,7 +54,6 @@ public class CreateEventActivity extends AppCompatActivity {
         endTimeTextView = findViewById(R.id.endTimeTextView);
         autoApproveCheckBox = findViewById(R.id.autoApproveCheckBox);
         createEventButton = findViewById(R.id.createEventButton);
-        currentDate = Calendar.getInstance();
 
         dateTextView.setOnClickListener(v -> showDatePicker());
         startTimeTextView.setOnClickListener(v -> showTimePicker(startTimeTextView, true));
@@ -47,15 +62,18 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void showDatePicker() {
+        Calendar currentDate = Calendar.getInstance();
+
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, year, month, dayOfMonth) -> {
-                    selectedDate = Calendar.getInstance();
+                    Calendar selectedDate = Calendar.getInstance();
                     selectedDate.set(year, month, dayOfMonth);
 
                     if (selectedDate.before(currentDate)) {
                         Toast.makeText(this, "Please select a future date", Toast.LENGTH_SHORT).show();
                     } else {
+                        selectedDateInMillis = selectedDate.getTimeInMillis();
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                         dateTextView.setText(sdf.format(selectedDate.getTime()));
                     }
@@ -69,14 +87,13 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     private void showTimePicker(TextView timeTextView, boolean isStartTime) {
-        int hour = currentDate.get(Calendar.HOUR_OF_DAY);
-        int minute = currentDate.get(Calendar.MINUTE);
+        Calendar currentTime = Calendar.getInstance();
+        int hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        int minute = currentTime.get(Calendar.MINUTE);
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 this,
                 (view, selectedHour, selectedMinute) -> {
-                    selectedMinute = (selectedMinute < 30) ? 0 : 30;
-
                     Calendar time = Calendar.getInstance();
                     time.set(Calendar.HOUR_OF_DAY, selectedHour);
                     time.set(Calendar.MINUTE, selectedMinute);
@@ -85,9 +102,9 @@ public class CreateEventActivity extends AppCompatActivity {
                     timeTextView.setText(sdf.format(time.getTime()));
 
                     if (isStartTime) {
-                        startTime = time;
+                        startTimeInMillis = time.getTimeInMillis();
                     } else {
-                        endTime = time;
+                        endTimeInMillis = time.getTimeInMillis();
                     }
                 },
                 hour,
@@ -104,18 +121,18 @@ public class CreateEventActivity extends AppCompatActivity {
         boolean autoApprove = autoApproveCheckBox.isChecked();
 
         if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description) ||
-                TextUtils.isEmpty(address) || selectedDate == null ||
-                startTime == null || endTime == null) {
+                TextUtils.isEmpty(address) || selectedDateInMillis == 0 ||
+                startTimeInMillis == 0 || endTimeInMillis == 0) {
             Toast.makeText(this, "Please fill in all the fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (startTime.after(endTime)) {
+        if (startTimeInMillis >= endTimeInMillis) {
             Toast.makeText(this, "Start time must be before end time", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        EventInfo event = new EventInfo(title, description, address, selectedDate, startTime, endTime, autoApprove, email);
+        EventInfo event = new EventInfo(title, description, address, selectedDateInMillis, startTimeInMillis, endTimeInMillis, autoApprove, email);
         event.saveEventToDatabase();
 
         Toast.makeText(this, "Event Created Successfully!", Toast.LENGTH_SHORT).show();
