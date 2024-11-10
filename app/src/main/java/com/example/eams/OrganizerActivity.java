@@ -8,15 +8,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class OrganizerActivity extends AppCompatActivity {
 
+    private String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer);
+
+        email = getIntent().getStringExtra("email");
     }
 
     public void createEvent(View view) {
 
         Intent intent = new Intent(OrganizerActivity.this, CreateEventActivity.class);
+        intent.putExtra("email", email);
         startActivity(intent);
     }
 

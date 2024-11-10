@@ -21,11 +21,14 @@ public class CreateEventActivity extends AppCompatActivity {
     private CheckBox autoApproveCheckBox;
     private Button createEventButton;
     private Calendar selectedDate, currentDate, startTime, endTime;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+
+        email = getIntent().getStringExtra("email");
 
         titleEditText = findViewById(R.id.titleEditText);
         descriptionEditText = findViewById(R.id.descriptionEditText);
@@ -112,7 +115,7 @@ public class CreateEventActivity extends AppCompatActivity {
             return;
         }
 
-        EventInfo event = new EventInfo(title, description, address, selectedDate, startTime, endTime, autoApprove);
+        EventInfo event = new EventInfo(title, description, address, selectedDate, startTime, endTime, autoApprove, email);
         event.saveEventToDatabase();
 
         Toast.makeText(this, "Event Created Successfully!", Toast.LENGTH_SHORT).show();

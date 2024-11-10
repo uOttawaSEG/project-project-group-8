@@ -13,8 +13,9 @@ public class EventInfo {
     private Calendar endTime;
     private boolean autoApprove;
     private DatabaseReference databaseReference;
+    private String email;
 
-    public EventInfo(String title, String description, String address, Calendar date, Calendar startTime, Calendar endTime, boolean autoApprove) {
+    public EventInfo(String title, String description, String address, Calendar date, Calendar startTime, Calendar endTime, boolean autoApprove, String email) {
         this.title = title;
         this.description = description;
         this.address = address;
@@ -22,6 +23,7 @@ public class EventInfo {
         this.startTime = startTime;
         this.endTime = endTime;
         this.autoApprove = autoApprove;
+        this.email = email;
         this.databaseReference = FirebaseDatabase.getInstance().getReference("events");
     }
 
@@ -66,6 +68,8 @@ public class EventInfo {
         return autoApprove;
     }
 
+    public String getEmail() {return email; }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -93,4 +97,6 @@ public class EventInfo {
     public void setAutoApprove(boolean autoApprove) {
         this.autoApprove = autoApprove;
     }
+
+    public void setEmail(String email) {this.email = email; }
 }

@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Attendee attendee = attendeeSnapshot.getValue(Attendee.class);
                                 if (attendee != null && attendee.getPassword().equals(password)) {
                                     // Check the status before allowing login
-                                    handleUserStatus(attendee.getStatus(), "Attendee");
+                                    handleUserStatus(attendee.getStatus(), "Attendee", attendee.getEmail());
                                     return;
                                     //Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                                     //Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
@@ -98,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Organizer organizer = organizerSnapshot.getValue(Organizer.class);
                                 if (organizer != null && organizer.getPassword().equals(password)) {
                                     // Check the status before allowing login
-                                    handleUserStatus(organizer.getStatus(), "Organizer");
+                                    handleUserStatus(organizer.getStatus(), "Organizer", organizer.getEmail());
                                     return;
                                     //Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                                     //Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
@@ -119,12 +119,13 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void handleUserStatus(String status, String role) {
+    private void handleUserStatus(String status, String role, String email) {
         switch (status) {
             case "approved":
                 Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                 if(role.equals("Organizer")) {
                     Intent intent = new Intent(LoginActivity.this, OrganizerActivity.class);
+                    intent.putExtra("email", email);
                     startActivity(intent);
                 }
                 else{
