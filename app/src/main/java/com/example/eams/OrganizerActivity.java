@@ -34,7 +34,9 @@ public class OrganizerActivity extends AppCompatActivity {
     public void pastEvents(View view) {
 
         Intent intent = new Intent(OrganizerActivity.this, PastEventsActivity.class);
+        intent.putExtra("organizerEmail", email);
         startActivity(intent);
+
     }
 
     public void logout(View view) {

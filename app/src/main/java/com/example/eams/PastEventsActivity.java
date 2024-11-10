@@ -1,10 +1,10 @@
 package com.example.eams;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +15,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class PastEventsActivity extends AppCompatActivity {
 
@@ -34,42 +36,39 @@ public class PastEventsActivity extends AppCompatActivity {
         pastEventsListView = findViewById(R.id.pastEventsListView);
         eventsRef = FirebaseDatabase.getInstance().getReference("events");
 
+        String organizerEmail = getIntent().getStringExtra("organizerEmail");
+
         pastEventsList = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, pastEventsList);
         pastEventsListView.setAdapter(adapter);
 
-        loadPastEvents();
+        loadPastEvents(organizerEmail);
     }
 
-    private void loadPastEvents() {
+    private void loadPastEvents(String organizerEmail) {
         eventsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 pastEventsList.clear();
-                for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-                    try {
-                        EventInfo event = eventSnapshot.getValue(EventInfo.class);
-                        if (event != null) {
-                            // Log for debugging
-                            Log.d("PastEventsActivity", "Event title: " + event.getTitle());
-                            Log.d("PastEventsActivity", "Date (long): " + event.getDate());
-                            Log.d("PastEventsActivity", "Start Time (long): " + event.getStartTime());
-                            Log.d("PastEventsActivity", "End Time (long): " + event.getEndTime());
+                long currentTime = System.currentTimeMillis();
 
-                            // Check if the event date is in the past
-                            if (isPastEvent(event.getDate())) {
-                                String eventDetails = "Title: " + event.getTitle() +
-                                        "\nDate: " + new Date(event.getDate()).toString() +
-                                        "\nStart Time: " + new Date(event.getStartTime()).toString() +
-                                        "\nEnd Time: " + new Date(event.getEndTime()).toString() +
-                                        "\nAddress: " + event.getAddress() +
-                                        "\nDescription: " + event.getDescription();
-                                pastEventsList.add(eventDetails);
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.e("PastEventsActivity", "Error processing event data", e);
-                        Toast.makeText(PastEventsActivity.this, "Error loading event data", Toast.LENGTH_SHORT).show();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+                for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                    EventInfo event = eventSnapshot.getValue(EventInfo.class);
+                    if (event != null && isPastEvent(event.getDate(), currentTime) && organizerEmail.equals(event.getEmail())) {
+                        String eventDate = dateFormat.format(new Date(event.getDate()));
+                        String startTime = timeFormat.format(new Date(event.getStartTime()));
+                        String endTime = timeFormat.format(new Date(event.getEndTime()));
+
+                        String eventDetails = "Title: " + event.getTitle() +
+                                "\nDate: " + eventDate +
+                                "\nStart Time: " + startTime +
+                                "\nEnd Time: " + endTime +
+                                "\nAddress: " + event.getAddress() +
+                                "\nDescription: " + event.getDescription();
+                        pastEventsList.add(eventDetails);
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -82,8 +81,9 @@ public class PastEventsActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isPastEvent(long eventDate) {
-        return eventDate < System.currentTimeMillis();
+    private boolean isPastEvent(long eventDateInMillis, long currentTime) {
+        boolean isPast = eventDateInMillis < currentTime;
+        return isPast;
     }
 }
 
