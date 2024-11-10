@@ -1,6 +1,7 @@
 package com.example.eams;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -57,7 +58,7 @@ public class PastEventsActivity extends AppCompatActivity {
 
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     EventInfo event = eventSnapshot.getValue(EventInfo.class);
-                    if (event != null && isPastEvent(event.getDate(), currentTime) && organizerEmail.equals(event.getEmail())) {
+                    if (event != null && isPastEvent(event.getEndTime()) && organizerEmail.equals(event.getEmail())) {
                         String eventDate = dateFormat.format(new Date(event.getDate()));
                         String startTime = timeFormat.format(new Date(event.getStartTime()));
                         String endTime = timeFormat.format(new Date(event.getEndTime()));
@@ -81,9 +82,11 @@ public class PastEventsActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isPastEvent(long eventDateInMillis, long currentTime) {
-        boolean isPast = eventDateInMillis < currentTime;
+    private boolean isPastEvent(long eventEndTimeInMillis) {
+        long currentTimeInMillis = System.currentTimeMillis();
+        boolean isPast = eventEndTimeInMillis < currentTimeInMillis;
         return isPast;
     }
+
 }
 
