@@ -36,6 +36,7 @@ public class CreateEventActivity extends AppCompatActivity {
         autoApproveCheckBox = findViewById(R.id.autoApproveCheckBox);
         createEventButton = findViewById(R.id.createEventButton);
         currentDate = Calendar.getInstance();
+
         dateTextView.setOnClickListener(v -> showDatePicker());
         startTimeTextView.setOnClickListener(v -> showTimePicker(startTimeTextView, true));
         endTimeTextView.setOnClickListener(v -> showTimePicker(endTimeTextView, false));
@@ -110,6 +111,9 @@ public class CreateEventActivity extends AppCompatActivity {
             Toast.makeText(this, "Start time must be before end time", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        EventInfo event = new EventInfo(title, description, address, selectedDate, startTime, endTime, autoApprove);
+        event.saveEventToDatabase();
 
         Toast.makeText(this, "Event Created Successfully!", Toast.LENGTH_SHORT).show();
         finish();
