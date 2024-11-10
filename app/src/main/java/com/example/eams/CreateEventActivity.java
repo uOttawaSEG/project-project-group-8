@@ -98,17 +98,28 @@ public class CreateEventActivity extends AppCompatActivity {
                         Toast.makeText(this, "Please select a time in 30-minute intervals", Toast.LENGTH_SHORT).show();
                         selectedMinute = (selectedMinute < 30) ? 0 : 30;
                     }
-                    Calendar time = Calendar.getInstance();
-                    time.set(Calendar.HOUR_OF_DAY, selectedHour);
-                    time.set(Calendar.MINUTE, selectedMinute);
+                    Calendar selectedTime = Calendar.getInstance();
+                    selectedTime.set(Calendar.HOUR_OF_DAY, selectedHour);
+                    selectedTime.set(Calendar.MINUTE, selectedMinute);
+
+                    Calendar selectedDate = Calendar.getInstance();
+                    selectedDate.setTimeInMillis(selectedDateInMillis);
+
+                    boolean isToday = currentTime.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
+                            currentTime.get(Calendar.DAY_OF_YEAR) == selectedDate.get(Calendar.DAY_OF_YEAR);
+
+                    if (isToday && selectedTime.before(currentTime)) {
+                        Toast.makeText(this, "Please select a future time", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
                     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-                    timeTextView.setText(sdf.format(time.getTime()));
+                    timeTextView.setText(sdf.format(selectedTime.getTime()));
 
                     if (isStartTime) {
-                        startTimeInMillis = time.getTimeInMillis();
+                        startTimeInMillis = selectedTime.getTimeInMillis();
                     } else {
-                        endTimeInMillis = time.getTimeInMillis();
+                        endTimeInMillis = selectedTime.getTimeInMillis();
                     }
                 },
                 hour,
