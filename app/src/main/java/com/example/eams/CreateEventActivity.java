@@ -94,6 +94,10 @@ public class CreateEventActivity extends AppCompatActivity {
         TimePickerDialog timePickerDialog = new TimePickerDialog(
                 this,
                 (view, selectedHour, selectedMinute) -> {
+                    if (selectedMinute % 30 != 0) {
+                        Toast.makeText(this, "Please select a time in 30-minute intervals", Toast.LENGTH_SHORT).show();
+                        selectedMinute = (selectedMinute < 30) ? 0 : 30;
+                    }
                     Calendar time = Calendar.getInstance();
                     time.set(Calendar.HOUR_OF_DAY, selectedHour);
                     time.set(Calendar.MINUTE, selectedMinute);
