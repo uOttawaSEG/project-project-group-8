@@ -28,6 +28,7 @@ public class OrganizerActivity extends AppCompatActivity {
     public void upcomingEvents(View view) {
 
         Intent intent = new Intent(OrganizerActivity.this, UpcomingEventsActivity.class);
+        intent.putExtra("organizerEmail", email);
         startActivity(intent);
     }
 
