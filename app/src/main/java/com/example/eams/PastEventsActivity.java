@@ -1,7 +1,6 @@
 package com.example.eams;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -63,13 +62,21 @@ public class PastEventsActivity extends AppCompatActivity {
                         String startTime = timeFormat.format(new Date(event.getStartTime()));
                         String endTime = timeFormat.format(new Date(event.getEndTime()));
 
+                        List<String> attendees = event.getAttendees();
+                        String attendeesList = event.getAttendees() != null && !event.getAttendees().isEmpty()
+                                ? String.join(", ", event.getAttendees())
+                                : "No attendees";
+
+
                         String eventDetails = "Title: " + event.getTitle() +
                                 "\nDate: " + eventDate +
                                 "\nStart Time: " + startTime +
                                 "\nEnd Time: " + endTime +
                                 "\nAddress: " + event.getAddress() +
-                                "\nDescription: " + event.getDescription();
+                                "\nDescription: " + event.getDescription() +
+                                "\nAttendees: " + attendeesList;
                         pastEventsList.add(eventDetails);
+
                     }
                 }
                 adapter.notifyDataSetChanged();

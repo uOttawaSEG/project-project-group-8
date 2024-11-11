@@ -3,6 +3,9 @@ package com.example.eams;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EventInfo {
     private String title;
     private String description;
@@ -12,6 +15,7 @@ public class EventInfo {
     private long endTime;
     private boolean autoApprove;
     private String email;
+    private List<String> attendees;
 
     public EventInfo() {
     }
@@ -26,6 +30,7 @@ public class EventInfo {
         this.endTime = endTime;
         this.autoApprove = autoApprove;
         this.email = email;
+        this.attendees = new ArrayList<>();
     }
 
     public void saveEventToDatabase() {
@@ -104,5 +109,20 @@ public class EventInfo {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<String> getAttendees() {
+        return attendees;
+    }
+
+    public void setAttendees(List<String> attendees) {
+        this.attendees = attendees;
+    }
+
+    public void addAttendee(String attendee) {
+        if (this.attendees == null) {
+            this.attendees = new ArrayList<>();
+        }
+        this.attendees.add(attendee);
     }
 }
