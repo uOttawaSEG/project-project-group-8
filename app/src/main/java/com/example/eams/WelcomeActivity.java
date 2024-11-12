@@ -8,12 +8,15 @@ import android.view.View;
 
 public class WelcomeActivity extends AppCompatActivity {
 
+    private String email;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
         String role = getIntent().getStringExtra("role");
+        email = getIntent().getStringExtra("email");
 
         TextView welcomeTextView = findViewById(R.id.welcomeTextView);
         welcomeTextView.setText("Welcome! You are logged in as " + role);
@@ -22,6 +25,13 @@ public class WelcomeActivity extends AppCompatActivity {
     public void logout(View view) {
 
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void eventsInbox(View view) {
+
+        Intent intent = new Intent(WelcomeActivity.this, AttendeeEventsInboxActivity.class);
+        intent.putExtra("email", email);
         startActivity(intent);
     }
 }

@@ -65,10 +65,6 @@ public class LoginActivity extends AppCompatActivity {
                                     // Check the status before allowing login
                                     handleUserStatus(attendee.getStatus(), "Attendee", attendee.getEmail());
                                     return;
-                                    //Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                                    //Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                                    //intent.putExtra("role", "Attendee");
-                                    //startActivity(intent);
 
                                 }
                             }
@@ -100,10 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                                     // Check the status before allowing login
                                     handleUserStatus(organizer.getStatus(), "Organizer", organizer.getEmail());
                                     return;
-                                    //Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                                    //Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
-                                    //intent.putExtra("role", "Organizer");
-                                    //startActivity(intent);
 
                                 }
                             }
@@ -131,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                 else{
                     Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
                     intent.putExtra("role", role);
+                    intent.putExtra("email", email);
                     startActivity(intent);
                 }
                 break;

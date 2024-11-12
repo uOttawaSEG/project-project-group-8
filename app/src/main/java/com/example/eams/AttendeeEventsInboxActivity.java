@@ -1,5 +1,6 @@
 package com.example.eams;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,22 +25,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class UpcomingEventsActivity extends AppCompatActivity {
+public class AttendeeEventsInboxActivity extends AppCompatActivity {
 
     private ListView upcomingEventsListView;
     private DatabaseReference eventsRef;
     private List<String> upcomingEventsList;
     private ArrayAdapter<String> adapter;
+    private String attendeeEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upcoming_events);
+        setContentView(R.layout.activity_attendee_events_inbox);
 
-        upcomingEventsListView = findViewById(R.id.upcomingEventsListView);
+        attendeeEmail = getIntent().getStringExtra("email");
+
+        upcomingEventsListView = findViewById(R.id.AttendeeEventsListView);
         eventsRef = FirebaseDatabase.getInstance().getReference("events");
-
-        String organizerEmail = getIntent().getStringExtra("organizerEmail");
 
         upcomingEventsList = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, upcomingEventsList);
@@ -50,16 +52,17 @@ public class UpcomingEventsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
 
-                Intent intent = new Intent(UpcomingEventsActivity.this, EventRegistrationRequestActivity.class);
+                Intent intent = new Intent(AttendeeEventsInboxActivity.this, AttendeeEventRegisterActivity.class);
                 intent.putExtra("EventInfo", item);
+                intent.putExtra("attendeeEmail", attendeeEmail);
                 startActivity(intent);
             }
         });
 
-        loadUpcomingEvents(organizerEmail);
+        loadUpcomingEvents();
     }
 
-    private void loadUpcomingEvents(String organizerEmail) {
+    private void loadUpcomingEvents() {
         eventsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -71,15 +74,10 @@ public class UpcomingEventsActivity extends AppCompatActivity {
 
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     EventInfo event = eventSnapshot.getValue(EventInfo.class);
-                    if (event != null && isUpcomingEvent(event.getStartTime()) && organizerEmail.equals(event.getEmail())) {
+                    if (event != null && isUpcomingEvent(event.getStartTime())) {
                         String eventDate = dateFormat.format(new Date(event.getDate()));
                         String startTime = timeFormat.format(new Date(event.getStartTime()));
                         String endTime = timeFormat.format(new Date(event.getEndTime()));
-
-                        List<String> attendees = event.getAttendees();
-                        String attendeesList = event.getAttendees() != null && !event.getAttendees().isEmpty()
-                                ? String.join(", ", event.getAttendees())
-                                : "No attendees";
 
 
                         String eventDetails = "Title: " + event.getTitle() +
@@ -87,8 +85,7 @@ public class UpcomingEventsActivity extends AppCompatActivity {
                                 "\nStart Time: " + startTime +
                                 "\nEnd Time: " + endTime +
                                 "\nAddress: " + event.getAddress() +
-                                "\nDescription: " + event.getDescription() +
-                                "\nAttendees: " + attendeesList;
+                                "\nDescription: " + event.getDescription();
                         upcomingEventsList.add(eventDetails);
 
                     }
@@ -99,7 +96,7 @@ public class UpcomingEventsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(UpcomingEventsActivity.this, "Failed to load upcoming events", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AttendeeEventsInboxActivity.this, "Failed to load upcoming events", Toast.LENGTH_SHORT).show();
             }
         });
     }

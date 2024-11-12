@@ -16,6 +16,7 @@ public class EventInfo {
     private boolean autoApprove;
     private String email;
     private List<String> attendees;
+    private List<String> registrationRequests;
 
     public EventInfo() {
     }
@@ -31,6 +32,7 @@ public class EventInfo {
         this.autoApprove = autoApprove;
         this.email = email;
         this.attendees = new ArrayList<>();
+        this.registrationRequests = new ArrayList<>();
     }
 
     public void saveEventToDatabase() {
@@ -124,5 +126,17 @@ public class EventInfo {
             this.attendees = new ArrayList<>();
         }
         this.attendees.add(attendee);
+    }
+
+    public List<String> getRegistrationRequests() {return registrationRequests; }
+
+    public void setRegistrationRequests(List<String> registrationRequests) {this.registrationRequests = registrationRequests; }
+
+    public void addRegistrationRequest(String registrationRequest) {
+
+        if(this.registrationRequests == null) {
+            this.registrationRequests = new ArrayList<>();
+        }
+        this.registrationRequests.add(registrationRequest);
     }
 }
