@@ -69,6 +69,8 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
         });
 
         registrationRequests();
+
+
     }
 
     private void registrationRequests() {
@@ -76,39 +78,82 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
         Query query = eventsRef.orderByChild("title").equalTo(title);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-            registrationRequestList.clear();
-            if (dataSnapshot.exists()) {
+                registrationRequestList.clear();
+                if (dataSnapshot.exists()) {
 
-                for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
 
-                    String id = eventSnapshot.getKey();
-                    EventInfo event = eventSnapshot.getValue(EventInfo.class);
+                        String id = eventSnapshot.getKey();
+                        EventInfo event = eventSnapshot.getValue(EventInfo.class);
 
-                    List<String> requestList = event.getRegistrationRequests();
+                        List<String> requestList = new ArrayList<>();
 
-                    for(String request: requestList) {
+                        if(event.getRegistrationRequests() != null) {
 
-                        registrationRequestList.add(request);
+                            requestList = event.getRegistrationRequests();
+                        }
+
+
+
+                        if(!requestList.isEmpty()) {
+
+                            for(String request: requestList) {
+
+                                registrationRequestList.add(request);
+                            }
+                        }
                     }
-                }
-                adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(EventRegistrationRequestActivity.this, "No event found", Toast.LENGTH_SHORT).show();
-            }
-        }
+                    adapter.notifyDataSetChanged();
 
-        @Override
-        public void onCancelled(DatabaseError databaseError) {
-            Toast.makeText(EventRegistrationRequestActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
-        }
-    });
+                } else {
+                    Toast.makeText(EventRegistrationRequestActivity.this, "No event found", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(EventRegistrationRequestActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    public void aprroveAll(View view) {
+    public void approveAll(View view) {
 
 
+    }
+
+    public void deleteEvent(View view) {
+
+        Query query2 = eventsRef.orderByChild("title").equalTo(title);
+
+        query2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+
+                        String id = eventSnapshot.getKey();
+                        EventInfo event = eventSnapshot.getValue(EventInfo.class);
+
+                        eventsRef.child(id).removeValue();
+
+                        Toast.makeText(EventRegistrationRequestActivity.this, "Event successfully removed", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(EventRegistrationRequestActivity.this, "No event found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(EventRegistrationRequestActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
