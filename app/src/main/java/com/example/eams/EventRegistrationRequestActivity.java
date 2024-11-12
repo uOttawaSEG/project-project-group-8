@@ -61,9 +61,10 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
 
-                /*Intent intent = new Intent(EventRegistrationRequestActivity.this, AttendeeEventRegisterActivity.class);
-                intent.putExtra("EventInfo", item);
-                startActivity(intent);*/
+                Intent intent = new Intent(EventRegistrationRequestActivity.this, EventRegistrationRequestAttendeeDetailActivity.class);
+                intent.putExtra("EventTitle", title);
+                intent.putExtra("attendeeEmail", item);
+                startActivity(intent);
             }
         });
 
