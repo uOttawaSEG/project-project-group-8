@@ -1,5 +1,6 @@
 package com.example.eams;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,8 @@ public class UpcomingEventsActivity extends AppCompatActivity {
     private DatabaseReference eventsRef;
     private List<String> upcomingEventsList;
     private ArrayAdapter<String> adapter;
+    private Intent receive;
+    private String organizerEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +42,15 @@ public class UpcomingEventsActivity extends AppCompatActivity {
         upcomingEventsListView = findViewById(R.id.upcomingEventsListView);
         eventsRef = FirebaseDatabase.getInstance().getReference("events");
 
-        String organizerEmail = getIntent().getStringExtra("organizerEmail");
+        receive = getIntent();
+
+        organizerEmail = receive.getStringExtra("organizerEmail");
 
         upcomingEventsList = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, upcomingEventsList);
         upcomingEventsListView.setAdapter(adapter);
+
+        loadUpcomingEvents(organizerEmail);
 
         upcomingEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,11 +59,13 @@ public class UpcomingEventsActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(UpcomingEventsActivity.this, EventRegistrationRequestActivity.class);
                 intent.putExtra("EventInfo", item);
+                intent.putExtra("organizerEmail",organizerEmail);
                 startActivity(intent);
+                finish();
             }
+
         });
 
-        loadUpcomingEvents(organizerEmail);
     }
 
     private void loadUpcomingEvents(String organizerEmail) {
@@ -71,7 +80,7 @@ public class UpcomingEventsActivity extends AppCompatActivity {
 
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     EventInfo event = eventSnapshot.getValue(EventInfo.class);
-                    if (event != null && isUpcomingEvent(event.getStartTime()) && organizerEmail.equals(event.getEmail())) {
+                    if (event != null && isUpcomingEvent(event.getStartTime(), event.getDate()) && organizerEmail.equals(event.getEmail())) {
                         String eventDate = dateFormat.format(new Date(event.getDate()));
                         String startTime = timeFormat.format(new Date(event.getStartTime()));
                         String endTime = timeFormat.format(new Date(event.getEndTime()));
@@ -104,9 +113,9 @@ public class UpcomingEventsActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isUpcomingEvent(long eventStartTimeInMillis) {
+    private boolean isUpcomingEvent(long eventStartTimeInMillis, long eventDate) {
         long currentTimeInMillis = System.currentTimeMillis();
-        boolean isUpcoming = eventStartTimeInMillis > currentTimeInMillis;
+        boolean isUpcoming = (eventStartTimeInMillis > currentTimeInMillis) || (eventDate > currentTimeInMillis);
         return isUpcoming;
     }
 

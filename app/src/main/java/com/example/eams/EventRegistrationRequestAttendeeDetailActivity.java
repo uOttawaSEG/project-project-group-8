@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventRegistrationRequestAttendeeDetailActivity extends AppCompatActivity {
@@ -21,6 +22,7 @@ public class EventRegistrationRequestAttendeeDetailActivity extends AppCompatAct
     private String attendeeEmail;
     private String title;
     private DatabaseReference attendeeReference;
+    private DatabaseReference eventReference;
     private TextView attendeeDetailView;
 
     @Override
@@ -32,6 +34,8 @@ public class EventRegistrationRequestAttendeeDetailActivity extends AppCompatAct
         title = getIntent().getStringExtra("EventTitle");
 
         attendeeReference = FirebaseDatabase.getInstance().getReference("attendees");
+
+        eventReference = FirebaseDatabase.getInstance().getReference("events");
 
         attendeeDetailView = findViewById(R.id.AttendeeDetailView);
 
@@ -61,7 +65,7 @@ public class EventRegistrationRequestAttendeeDetailActivity extends AppCompatAct
                         attendeeDetailView.setText(attendeeInfo);
                     }
                 } else {
-                    Toast.makeText(EventRegistrationRequestAttendeeDetailActivity.this, "No event found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventRegistrationRequestAttendeeDetailActivity.this, "No attendee found", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -74,11 +78,107 @@ public class EventRegistrationRequestAttendeeDetailActivity extends AppCompatAct
 
     public void approve(View view) {
 
+        Query query = eventReference.orderByChild("title").equalTo(title);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+
+                        String id = eventSnapshot.getKey();
+
+                        EventInfo event = eventSnapshot.getValue(EventInfo.class);
+
+                        List<String> registrationRequests = new ArrayList<>();
+
+                        if(event.getRegistrationRequests() != null) {
+
+                            registrationRequests = event.getRegistrationRequests();
+
+                            registrationRequests.remove(attendeeEmail);
+
+                            event.setRegistrationRequests(registrationRequests);
+                        }
+
+                        List<String> attendeesList = new ArrayList<>();
+
+                        if(event.getAttendees() != null) {
+
+                            attendeesList = event.getAttendees();
+                        }
+
+                        attendeesList.add(attendeeEmail);
+
+                        event.setAttendees(attendeesList);
+
+                        eventReference.child(id).removeValue();
+
+                        event.saveEventToDatabase();
+
+                        Toast.makeText(EventRegistrationRequestAttendeeDetailActivity.this, "Approved Successfully", Toast.LENGTH_SHORT).show();
+
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(EventRegistrationRequestAttendeeDetailActivity.this, "No event found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(EventRegistrationRequestAttendeeDetailActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
     public void reject(View view) {
 
+        Query query = eventReference.orderByChild("title").equalTo(title);
 
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+
+                        String id = eventSnapshot.getKey();
+
+                        EventInfo event = eventSnapshot.getValue(EventInfo.class);
+
+                        List<String> registrationRequests = new ArrayList<>();
+
+                        if(event.getRegistrationRequests() != null) {
+
+                            registrationRequests = event.getRegistrationRequests();
+
+                            registrationRequests.remove(attendeeEmail);
+
+                            event.setRegistrationRequests(registrationRequests);
+
+                            eventReference.child(id).removeValue();
+
+                            event.saveEventToDatabase();
+
+                            Toast.makeText(EventRegistrationRequestAttendeeDetailActivity.this, "Rejected Successfully", Toast.LENGTH_SHORT).show();
+
+                            finish();
+                        }
+                    }
+                } else {
+                    Toast.makeText(EventRegistrationRequestAttendeeDetailActivity.this, "No event found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(EventRegistrationRequestAttendeeDetailActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

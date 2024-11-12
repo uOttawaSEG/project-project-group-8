@@ -57,7 +57,7 @@ public class PastEventsActivity extends AppCompatActivity {
 
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     EventInfo event = eventSnapshot.getValue(EventInfo.class);
-                    if (event != null && isPastEvent(event.getEndTime()) && organizerEmail.equals(event.getEmail())) {
+                    if (event != null && isPastEvent(event.getEndTime(),event.getDate()) && organizerEmail.equals(event.getEmail())) {
                         String eventDate = dateFormat.format(new Date(event.getDate()));
                         String startTime = timeFormat.format(new Date(event.getStartTime()));
                         String endTime = timeFormat.format(new Date(event.getEndTime()));
@@ -89,9 +89,9 @@ public class PastEventsActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isPastEvent(long eventEndTimeInMillis) {
+    private boolean isPastEvent(long eventEndTimeInMillis, long eventDate) {
         long currentTimeInMillis = System.currentTimeMillis();
-        boolean isPast = eventEndTimeInMillis < currentTimeInMillis;
+        boolean isPast = (eventEndTimeInMillis < currentTimeInMillis)  && (eventDate < currentTimeInMillis);
         return isPast;
     }
 

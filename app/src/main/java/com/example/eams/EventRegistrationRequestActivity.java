@@ -30,6 +30,7 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
     private DatabaseReference eventsRef;
     private List<String> registrationRequestList;
     private ArrayAdapter<String> adapter;
+    private String organizerEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,8 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
         eventsRef = FirebaseDatabase.getInstance().getReference("events");
 
         eventInfo = receive.getStringExtra("EventInfo");
+
+        organizerEmail = receive.getStringExtra("organizerEmail");
 
         Pattern pattern = Pattern.compile("Title: (.*?)\\n");
         Matcher matcher = pattern.matcher(eventInfo);
@@ -64,7 +67,9 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
                 Intent intent = new Intent(EventRegistrationRequestActivity.this, EventRegistrationRequestAttendeeDetailActivity.class);
                 intent.putExtra("EventTitle", title);
                 intent.putExtra("attendeeEmail", item);
+                intent.putExtra("organizerEmail",organizerEmail);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -123,7 +128,60 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
 
     public void approveAll(View view) {
 
+        Query query = eventsRef.orderByChild("title").equalTo(title);
 
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+
+                        String id = eventSnapshot.getKey();
+
+                        EventInfo event = eventSnapshot.getValue(EventInfo.class);
+
+                        List<String> registrationRequests = new ArrayList<>();
+
+                        if(event.getRegistrationRequests() != null) {
+
+                            registrationRequests = event.getRegistrationRequests();
+
+                            List<String> attendeesList = new ArrayList<>();
+
+                            if(event.getAttendees() != null) {
+
+                                attendeesList = event.getAttendees();
+                            }
+
+                            attendeesList.addAll(registrationRequests);
+
+                            registrationRequests = new ArrayList<>();
+
+                            event.setAttendees(attendeesList);
+
+                            event.setRegistrationRequests(registrationRequests);
+
+                            eventsRef.child(id).removeValue();
+
+                            event.saveEventToDatabase();
+
+                            Toast.makeText(EventRegistrationRequestActivity.this, "Approved All Requests Successfully", Toast.LENGTH_SHORT).show();
+
+                            finish();
+                        }
+                    }
+                } else {
+                    Toast.makeText(EventRegistrationRequestActivity.this, "No event found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(EventRegistrationRequestActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void deleteEvent(View view) {
@@ -144,6 +202,8 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
                         eventsRef.child(id).removeValue();
 
                         Toast.makeText(EventRegistrationRequestActivity.this, "Event successfully removed", Toast.LENGTH_SHORT).show();
+
+                        finish();
                     }
                 } else {
                     Toast.makeText(EventRegistrationRequestActivity.this, "No event found", Toast.LENGTH_SHORT).show();
