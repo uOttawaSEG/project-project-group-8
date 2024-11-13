@@ -91,7 +91,7 @@ public class PastEventsActivity extends AppCompatActivity {
 
     private boolean isPastEvent(long eventEndTimeInMillis, long eventDate) {
         long currentTimeInMillis = System.currentTimeMillis();
-        boolean isPast = (eventEndTimeInMillis < currentTimeInMillis)  && (eventDate < currentTimeInMillis);
+        boolean isPast = (eventEndTimeInMillis < currentTimeInMillis);
         return isPast;
     }
 

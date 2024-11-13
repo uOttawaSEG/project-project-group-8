@@ -103,7 +103,7 @@ public class AttendeeEventsInboxActivity extends AppCompatActivity {
 
     private boolean isUpcomingEvent(long eventStartTimeInMillis, long eventDate) {
         long currentTimeInMillis = System.currentTimeMillis();
-        boolean isUpcoming = (eventStartTimeInMillis > currentTimeInMillis) || (eventDate > currentTimeInMillis);
+        boolean isUpcoming = (eventStartTimeInMillis > currentTimeInMillis);
         return isUpcoming;
     }
 
