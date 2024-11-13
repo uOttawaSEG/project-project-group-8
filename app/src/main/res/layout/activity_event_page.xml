@@ -9,8 +9,9 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="113dp"
-        android:layout_height="57dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
         android:text="TextView"
         app:layout_constraintBottom_toTopOf="@+id/delbutton"
         app:layout_constraintEnd_toEndOf="parent"

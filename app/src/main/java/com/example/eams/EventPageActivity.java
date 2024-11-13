@@ -29,6 +29,9 @@ public class EventPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_page);
         Intent receive = getIntent();
         str = receive.getStringExtra("EventInfo");
+
+        TextView textView = findViewById(R.id.textView);
+        textView.setText(str);
         find = "Date:";
         int i = str.indexOf(find);
         if(i>0) {

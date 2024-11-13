@@ -1,6 +1,9 @@
 package com.example.eams;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -43,6 +46,20 @@ public class PastEventsActivity extends AppCompatActivity {
         pastEventsListView.setAdapter(adapter);
 
         loadPastEvents(organizerEmail);
+
+        pastEventsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                final String item = (String) parent.getItemAtPosition(position);
+
+                Intent intent = new Intent(PastEventsActivity.this, EventPageActivity.class);
+                intent.putExtra("EventInfo", item);
+                intent.putExtra("organizerEmail",organizerEmail);
+                startActivity(intent);
+                finish();
+            }
+
+        });
     }
 
     private void loadPastEvents(String organizerEmail) {
