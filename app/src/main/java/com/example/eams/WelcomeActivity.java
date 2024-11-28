@@ -34,4 +34,11 @@ public class WelcomeActivity extends AppCompatActivity {
         intent.putExtra("email", email);
         startActivity(intent);
     }
+
+    public void myEventsInbox(View view) {
+
+        Intent intent = new Intent(WelcomeActivity.this, AttendeeMyEventsActivity.class);
+        intent.putExtra("email", email);
+        startActivity(intent);
+    }
 }
