@@ -17,6 +17,7 @@ public class EventInfo {
     private String email;
     private List<String> attendees;
     private List<String> registrationRequests;
+    private List<String> rejectedRequests;
 
     public EventInfo() {
     }
@@ -33,6 +34,7 @@ public class EventInfo {
         this.email = email;
         this.attendees = new ArrayList<>();
         this.registrationRequests = new ArrayList<>();
+        this.rejectedRequests = new ArrayList<>();
     }
 
     public void saveEventToDatabase() {
@@ -138,5 +140,17 @@ public class EventInfo {
             this.registrationRequests = new ArrayList<>();
         }
         this.registrationRequests.add(registrationRequest);
+    }
+
+    public List<String> getRejectedRequests() {return rejectedRequests; }
+
+    public void setRejectedRequests(List<String> rejectedRequests) {this.rejectedRequests = rejectedRequests; }
+
+    public void addRejectedRequest(String rejectedRequest) {
+
+        if(this.rejectedRequests == null) {
+            this.rejectedRequests = new ArrayList<>();
+        }
+        this.rejectedRequests.add(rejectedRequest);
     }
 }

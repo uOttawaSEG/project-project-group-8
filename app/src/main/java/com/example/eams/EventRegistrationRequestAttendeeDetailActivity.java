@@ -161,6 +161,17 @@ public class EventRegistrationRequestAttendeeDetailActivity extends AppCompatAct
 
                             event.setRegistrationRequests(registrationRequests);
 
+                            List<String> rejectedList = new ArrayList<>();
+
+                            if(event.getRejectedRequests() != null) {
+
+                                rejectedList = event.getRejectedRequests();
+                            }
+
+                            rejectedList.add(attendeeEmail);
+
+                            event.setRejectedRequests(rejectedList);
+
                             eventReference.child(id).removeValue();
 
                             event.saveEventToDatabase();
