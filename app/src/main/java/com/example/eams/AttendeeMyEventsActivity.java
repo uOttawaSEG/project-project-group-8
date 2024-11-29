@@ -52,6 +52,10 @@ public class AttendeeMyEventsActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String item = (String) parent.getItemAtPosition(position);
 
+                Intent intent = new Intent(AttendeeMyEventsActivity.this, AttendeeMyEventDetailActivity.class);
+                intent.putExtra("EventInfo", item);
+                intent.putExtra("attendeeEmail", attendeeEmail);
+                startActivity(intent);
             }
         });
 
@@ -80,19 +84,13 @@ public class AttendeeMyEventsActivity extends AppCompatActivity {
                             List<String> requestList = event.getRegistrationRequests();
                             List<String> rejectedList = event.getRejectedRequests();
                             String eventDetails;
+                            String status = "None";
 
                             if(attendees != null) {
 
                                 if(attendees.contains(attendeeEmail)) {
 
-                                    eventDetails = "Title: " + event.getTitle() +
-                                            "\nDate: " + eventDate +
-                                            "\nStart Time: " + startTime +
-                                            "\nEnd Time: " + endTime +
-                                            "\nAddress: " + event.getAddress() +
-                                            "\nDescription: " + event.getDescription() +
-                                            "\nStatus: Approved";
-                                    myEventsList.add(eventDetails);
+                                    status = "Approved";
                                 }
                             }
 
@@ -100,14 +98,7 @@ public class AttendeeMyEventsActivity extends AppCompatActivity {
 
                                 if(requestList.contains(attendeeEmail)) {
 
-                                    eventDetails = "Title: " + event.getTitle() +
-                                            "\nDate: " + eventDate +
-                                            "\nStart Time: " + startTime +
-                                            "\nEnd Time: " + endTime +
-                                            "\nAddress: " + event.getAddress() +
-                                            "\nDescription: " + event.getDescription() +
-                                            "\nStatus: Pending";
-                                    myEventsList.add(eventDetails);
+                                    status = "Pending";
                                 }
 
                             }
@@ -116,16 +107,21 @@ public class AttendeeMyEventsActivity extends AppCompatActivity {
 
                                 if(rejectedList.contains(attendeeEmail)) {
 
-                                    eventDetails = "Title: " + event.getTitle() +
-                                            "\nDate: " + eventDate +
-                                            "\nStart Time: " + startTime +
-                                            "\nEnd Time: " + endTime +
-                                            "\nAddress: " + event.getAddress() +
-                                            "\nDescription: " + event.getDescription() +
-                                            "\nStatus: Rejected";
-                                    myEventsList.add(eventDetails);
+                                    status = "Rejected";
                                 }
 
+                            }
+
+                            if(!status.equals("None")) {
+
+                                eventDetails = "Title: " + event.getTitle() +
+                                        "\nDate: " + eventDate +
+                                        "\nStart Time: " + startTime +
+                                        "\nEnd Time: " + endTime +
+                                        "\nAddress: " + event.getAddress() +
+                                        "\nDescription: " + event.getDescription() +
+                                        "\nStatus: "+ status;
+                                myEventsList.add(eventDetails);
                             }
 
                         }
