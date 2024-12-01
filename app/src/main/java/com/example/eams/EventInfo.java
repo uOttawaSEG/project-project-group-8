@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventInfo {
+    private String id;
     private String title;
     private String description;
     private String address;
@@ -21,7 +22,6 @@ public class EventInfo {
 
     public EventInfo() {
     }
-
 
     public EventInfo(String title, String description, String address, long date, long startTime, long endTime, boolean autoApprove, String email) {
         this.title = title;
@@ -41,14 +41,23 @@ public class EventInfo {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("events");
         String eventId = databaseReference.push().getKey();
         if (eventId != null) {
+            this.id = eventId; //generated ID to the event
             databaseReference.child(eventId).setValue(this)
                     .addOnSuccessListener(aVoid -> {
-
+                        // Success
                     })
                     .addOnFailureListener(e -> {
-
+                        // Failure
                     });
         }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -130,25 +139,31 @@ public class EventInfo {
         this.attendees.add(attendee);
     }
 
-    public List<String> getRegistrationRequests() {return registrationRequests; }
+    public List<String> getRegistrationRequests() {
+        return registrationRequests;
+    }
 
-    public void setRegistrationRequests(List<String> registrationRequests) {this.registrationRequests = registrationRequests; }
+    public void setRegistrationRequests(List<String> registrationRequests) {
+        this.registrationRequests = registrationRequests;
+    }
 
     public void addRegistrationRequest(String registrationRequest) {
-
-        if(this.registrationRequests == null) {
+        if (this.registrationRequests == null) {
             this.registrationRequests = new ArrayList<>();
         }
         this.registrationRequests.add(registrationRequest);
     }
 
-    public List<String> getRejectedRequests() {return rejectedRequests; }
+    public List<String> getRejectedRequests() {
+        return rejectedRequests;
+    }
 
-    public void setRejectedRequests(List<String> rejectedRequests) {this.rejectedRequests = rejectedRequests; }
+    public void setRejectedRequests(List<String> rejectedRequests) {
+        this.rejectedRequests = rejectedRequests;
+    }
 
     public void addRejectedRequest(String rejectedRequest) {
-
-        if(this.rejectedRequests == null) {
+        if (this.rejectedRequests == null) {
             this.rejectedRequests = new ArrayList<>();
         }
         this.rejectedRequests.add(rejectedRequest);
