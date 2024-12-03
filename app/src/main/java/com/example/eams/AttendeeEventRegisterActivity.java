@@ -71,6 +71,7 @@ public class AttendeeEventRegisterActivity extends AppCompatActivity {
                         }
 
                         eventReference.child(id).removeValue();
+                        finish();
                     }
                 } else {
                     Toast.makeText(AttendeeEventRegisterActivity.this, "No event found", Toast.LENGTH_SHORT).show();
