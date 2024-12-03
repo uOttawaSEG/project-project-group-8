@@ -1,5 +1,6 @@
 package com.example.eams;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -24,24 +25,25 @@ public class SearchEventsActivity extends AppCompatActivity {
 
     private EditText searchEditText;
     private ImageButton searchButton;
-    private ListView eventsListView;
+    private ListView attendeeEventsListView;
     private ArrayAdapter<String> eventsAdapter;
     private List<String> eventsList = new ArrayList<>();
     private DatabaseReference eventsRef;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_events);
+        setContentView(R.layout.activity_attendee_event_register);
 
         searchEditText = findViewById(R.id.searchEditText);
         searchButton = findViewById(R.id.searchButton);
-        eventsListView = findViewById(R.id.eventsListView);
+        attendeeEventsListView = findViewById(R.id.AttendeeEventsListView);
 
         eventsRef = FirebaseDatabase.getInstance().getReference("events");
 
         eventsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventsList);
-        eventsListView.setAdapter(eventsAdapter);
+        attendeeEventsListView.setAdapter(eventsAdapter);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +52,7 @@ public class SearchEventsActivity extends AppCompatActivity {
             }
         });
 
-        eventsListView.setOnItemClickListener((parent, view, position, id) -> {
+        attendeeEventsListView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedEvent = eventsList.get(position);
             Toast.makeText(SearchEventsActivity.this, "Selected event: " + selectedEvent, Toast.LENGTH_SHORT).show();
         });
