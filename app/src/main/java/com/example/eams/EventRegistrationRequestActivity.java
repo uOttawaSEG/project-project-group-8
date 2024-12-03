@@ -26,31 +26,37 @@ public class EventRegistrationRequestActivity extends AppCompatActivity {
     }
 
     public void deleteEvent(View view) {
-        Query query = eventsRef.orderByChild("title").equalTo(title);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query2 = eventsRef.orderByChild("title").equalTo(title);
+
+        query2.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+                        String id = eventSnapshot.getKey();
                         EventInfo event = eventSnapshot.getValue(EventInfo.class);
 
-                        if (event != null && event.getAttendees() != null && !event.getAttendees().isEmpty()) {
+
+                        if (event.getAttendees() != null && !event.getAttendees().isEmpty()) {
                             Toast.makeText(EventRegistrationRequestActivity.this, "This event cannot be deleted as it has registered attendees.", Toast.LENGTH_LONG).show();
                             return;
                         }
 
-                        eventSnapshot.getRef().removeValue();
-                        Toast.makeText(EventRegistrationRequestActivity.this, "Event successfully removed.", Toast.LENGTH_SHORT).show();
+
+                        eventsRef.child(id).removeValue();
+                        Toast.makeText(EventRegistrationRequestActivity.this, "Event successfully removed", Toast.LENGTH_SHORT).show();
                         finish();
+                        return;
                     }
                 } else {
-                    Toast.makeText(EventRegistrationRequestActivity.this, "No event found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EventRegistrationRequestActivity.this, "No event found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(EventRegistrationRequestActivity.this, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventRegistrationRequestActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -35,6 +35,7 @@ public class EventPageActivity extends AppCompatActivity {
         }
     }
 
+    // method to delete event
     public void delete(View view) {
         eventReference = FirebaseDatabase.getInstance().getReference("events");
         eventReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -44,10 +45,12 @@ public class EventPageActivity extends AppCompatActivity {
                     EventInfo event = d.getValue(EventInfo.class);
 
                     if (event != null && title != null && event.getTitle().trim().equalsIgnoreCase(title.trim())) {
+
                         if (event.getAttendees() != null && !event.getAttendees().isEmpty()) {
                             Toast.makeText(EventPageActivity.this, "This event cannot be deleted as it has registered attendees.", Toast.LENGTH_LONG).show();
                             return;
                         }
+
 
                         d.getRef().removeValue().addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
@@ -61,6 +64,7 @@ public class EventPageActivity extends AppCompatActivity {
                     }
                 }
 
+                // If event not found
                 Toast.makeText(EventPageActivity.this, "Event not found.", Toast.LENGTH_SHORT).show();
             }
 
