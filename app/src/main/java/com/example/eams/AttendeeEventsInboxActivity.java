@@ -74,7 +74,7 @@ public class AttendeeEventsInboxActivity extends AppCompatActivity {
 
                 for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
                     EventInfo event = eventSnapshot.getValue(EventInfo.class);
-                    if (event != null && isUpcomingEvent(event.getStartTime(), event.getDate())) {
+                    if (event != null && isUpcomingEvent(event.getStartTime(), event.getDate()) && (!alreadyRequested(event))) {
                         String eventDate = dateFormat.format(new Date(event.getDate()));
                         String startTime = timeFormat.format(new Date(event.getStartTime()));
                         String endTime = timeFormat.format(new Date(event.getEndTime()));
@@ -105,6 +105,28 @@ public class AttendeeEventsInboxActivity extends AppCompatActivity {
         long currentTimeInMillis = System.currentTimeMillis();
         boolean isUpcoming = (eventStartTimeInMillis > currentTimeInMillis);
         return isUpcoming;
+    }
+
+    private boolean alreadyRequested(EventInfo event) {
+
+        if(event.getRegistrationRequests() != null) {
+
+            if(event.getRegistrationRequests().contains(attendeeEmail))
+                return true;
+        }
+
+        else if(event.getAttendees() != null) {
+
+            if(event.getAttendees().contains(attendeeEmail))
+                return true;
+        }
+        else if(event.getRejectedRequests() != null) {
+
+            if(event.getRejectedRequests().contains(attendeeEmail))
+                return true;
+        }
+
+        return false;
     }
 
 }

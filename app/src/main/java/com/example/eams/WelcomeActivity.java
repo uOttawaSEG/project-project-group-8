@@ -41,4 +41,10 @@ public class WelcomeActivity extends AppCompatActivity {
         intent.putExtra("email", email);
         startActivity(intent);
     }
+    
+    public void searchEvents(View view) {
+        Intent intent =  new Intent(WelcomeActivity.this,SearchEventsActivity.class);
+        intent.putExtra("email",email);
+        startActivity(intent);
+    }
 }
