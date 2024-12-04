@@ -38,6 +38,7 @@ public class CreateEventActivity extends AppCompatActivity {
     private Button createEventButton;
     private long selectedDateInMillis, startTimeInMillis, endTimeInMillis;
     private String email;
+    private Calendar selectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,7 @@ public class CreateEventActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, year, month, dayOfMonth) -> {
-                    Calendar selectedDate = Calendar.getInstance();
+                    selectedDate = Calendar.getInstance();
                     selectedDate.set(year, month, dayOfMonth);
 
                     if (selectedDate.before(currentDate)) {
@@ -98,12 +99,9 @@ public class CreateEventActivity extends AppCompatActivity {
                         Toast.makeText(this, "Please select a time in 30-minute intervals", Toast.LENGTH_SHORT).show();
                         selectedMinute = (selectedMinute < 30) ? 0 : 30;
                     }
-                    Calendar selectedTime = Calendar.getInstance();
+                    Calendar selectedTime = selectedDate;
                     selectedTime.set(Calendar.HOUR_OF_DAY, selectedHour);
                     selectedTime.set(Calendar.MINUTE, selectedMinute);
-
-                    Calendar selectedDate = Calendar.getInstance();
-                    selectedDate.setTimeInMillis(selectedDateInMillis);
 
                     boolean isToday = currentTime.get(Calendar.YEAR) == selectedDate.get(Calendar.YEAR) &&
                             currentTime.get(Calendar.DAY_OF_YEAR) == selectedDate.get(Calendar.DAY_OF_YEAR);
