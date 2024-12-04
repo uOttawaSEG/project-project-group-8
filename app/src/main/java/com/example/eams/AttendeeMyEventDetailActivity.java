@@ -5,6 +5,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,6 +55,61 @@ public class AttendeeMyEventDetailActivity extends AppCompatActivity {
 
     public void cancel(View view) {
 
+        Query query = eventReference.orderByChild("title").equalTo(title);
 
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
+
+                        String id = eventSnapshot.getKey();
+                        EventInfo event = eventSnapshot.getValue(EventInfo.class);
+
+                        if(status.equals("Approved")) {
+
+                            List<String> attendeeList = new ArrayList<>();
+                            if(event.getAttendees() != null) {
+
+                                attendeeList = event.getAttendees();
+                                attendeeList.remove(attendeeEmail);
+                                event.setAttendees(attendeeList);
+                                eventReference.child(id).removeValue();
+                                event.saveEventToDatabase();
+                                Toast.makeText(AttendeeMyEventDetailActivity.this, "Registration Cancelled Successfully", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        }
+
+                        else if(status.equals("Pending")) {
+
+                            List<String> requestList = new ArrayList<>();
+                            if(event.getRegistrationRequests() != null) {
+
+                                requestList = event.getRegistrationRequests();
+                                requestList.remove(attendeeEmail);
+                                event.setRegistrationRequests(requestList);
+                                eventReference.child(id).removeValue();
+                                event.saveEventToDatabase();
+                                Toast.makeText(AttendeeMyEventDetailActivity.this, "Registration Cancelled Successfully", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        }
+                        else{
+                            Toast.makeText(AttendeeMyEventDetailActivity.this, "Unable to cancel(status=rejected)", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(AttendeeMyEventDetailActivity.this, "No event found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(AttendeeMyEventDetailActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
