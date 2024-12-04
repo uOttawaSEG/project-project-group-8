@@ -21,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -63,7 +64,7 @@ public class AttendeeMyEventsActivity extends AppCompatActivity {
     }
 
     private void loadMyEvents() {
-        eventsRef.orderByChild("startTime").addValueEventListener(new ValueEventListener() {
+        eventsRef.orderByKey().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 myEventsList.clear();
@@ -126,6 +127,7 @@ public class AttendeeMyEventsActivity extends AppCompatActivity {
 
                         }
                     }
+                    Collections.reverse(myEventsList);
                     adapter.notifyDataSetChanged();
                 }
                 else{
