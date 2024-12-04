@@ -68,7 +68,7 @@ public class AttendeeMyEventDetailActivity extends AppCompatActivity {
                         String id = eventSnapshot.getKey();
                         EventInfo event = eventSnapshot.getValue(EventInfo.class);
 
-                        if(status.equals("Approved")) {
+                        if(status.equals("Approved") && canCancel(event.getStartTime())) {
 
                             List<String> attendeeList = new ArrayList<>();
                             if(event.getAttendees() != null) {
@@ -83,7 +83,7 @@ public class AttendeeMyEventDetailActivity extends AppCompatActivity {
                             }
                         }
 
-                        else if(status.equals("Pending")) {
+                        else if(status.equals("Pending") && canCancel(event.getStartTime())) {
 
                             List<String> requestList = new ArrayList<>();
                             if(event.getRegistrationRequests() != null) {
@@ -97,7 +97,7 @@ public class AttendeeMyEventDetailActivity extends AppCompatActivity {
                                 finish();
                             }
                         }
-                        else{
+                        else if(status.equals("Rejected")){
                             Toast.makeText(AttendeeMyEventDetailActivity.this, "Unable to cancel(status=rejected)", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -111,5 +111,17 @@ public class AttendeeMyEventDetailActivity extends AppCompatActivity {
                 Toast.makeText(AttendeeMyEventDetailActivity.this, "Query cancelled", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean canCancel(long startTime) {
+
+        long currentTime = System.currentTimeMillis();
+
+        if (startTime - currentTime <= 24 * 60 * 60 * 1000) {
+            Toast.makeText(this, "Cannot cancel: Event starts within 24 hours.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 }
