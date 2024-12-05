@@ -156,9 +156,7 @@ public class AttendeeEventsInboxActivity extends AppCompatActivity {
                         }
                     }
 
-                    if (upcomingEventsList.isEmpty()) {
-                        Toast.makeText(AttendeeEventsInboxActivity.this, "No events found for the keyword: " + keyword, Toast.LENGTH_SHORT).show();
-                    } else {
+                    if (!upcomingEventsList.isEmpty()) {
                         adapter.notifyDataSetChanged();
                     }
                 }
